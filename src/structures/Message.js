@@ -7,6 +7,7 @@ const MessageAttachment = require('./MessageAttachment');
 const Embed = require('./MessageEmbed');
 const Mentions = require('./MessageMentions');
 const ReactionCollector = require('./ReactionCollector');
+const Sticker = require("./Sticker");
 const { Error, TypeError } = require('../errors');
 const ReactionManager = require('../managers/ReactionManager');
 const Collection = require('../util/Collection');
@@ -134,6 +135,17 @@ class Message extends Base {
     }
 
     /**
+     * A collection of stickers in the message
+     * @type {Collection<Snowflake, Sticker>}
+     */
+    this.stickers = new Collection();
+    if (data.stickers) {
+      for (const sticker of data.stickers) {
+        this.stickers.set(sticker.id, new Sticker(this.client, sticker));
+      }
+    }
+
+    /**
      * The timestamp the message was sent at
      * @type {number}
      */
@@ -180,9 +192,9 @@ class Message extends Base {
      */
     this.activity = data.activity
       ? {
-          partyID: data.activity.party_id,
-          type: data.activity.type,
-        }
+        partyID: data.activity.party_id,
+        type: data.activity.type,
+      }
       : null;
 
     if (this.member && data.member) {
@@ -211,10 +223,10 @@ class Message extends Base {
      */
     this.reference = data.message_reference
       ? {
-          channelID: data.message_reference.channel_id,
-          guildID: data.message_reference.guild_id,
-          messageID: data.message_reference.message_id,
-        }
+        channelID: data.message_reference.channel_id,
+        guildID: data.message_reference.guild_id,
+        messageID: data.message_reference.message_id,
+      }
       : null;
 
     if (data.referenced_message) {
@@ -388,8 +400,8 @@ class Message extends Base {
   get deletable() {
     return Boolean(
       !this.deleted &&
-        (this.author.id === this.client.user.id ||
-          this.channel.permissionsFor?.(this.client.user)?.has(Permissions.FLAGS.MANAGE_MESSAGES)),
+      (this.author.id === this.client.user.id ||
+        this.channel.permissionsFor?.(this.client.user)?.has(Permissions.FLAGS.MANAGE_MESSAGES)),
     );
   }
 
@@ -580,8 +592,8 @@ class Message extends Base {
       content instanceof APIMessage
         ? content
         : APIMessage.transformOptions(content, options, {
-            replyTo: this,
-          }),
+          replyTo: this,
+        }),
     );
   }
 

@@ -9,6 +9,12 @@ declare enum ChannelType {
   unknown = 7,
 }
 
+declare enum StickerFormatTypes {
+  PNG = 1,
+  APNG = 2,
+  LOTTIE = 3,
+}
+
 declare enum OverwriteTypes {
   role = 0,
   member = 1,
@@ -3006,11 +3012,11 @@ declare module 'discord.js' {
 
   type OverwriteType = 'member' | 'role';
 
-  interface PermissionFlags extends Record<PermissionString, bigint> {}
+  interface PermissionFlags extends Record<PermissionString, bigint> { }
 
-  interface PermissionObject extends Record<PermissionString, boolean> {}
+  interface PermissionObject extends Record<PermissionString, boolean> { }
 
-  interface PermissionOverwriteOption extends Partial<Record<PermissionString, boolean | null>> {}
+  interface PermissionOverwriteOption extends Partial<Record<PermissionString, boolean | null>> { }
 
   type PermissionResolvable = BitFieldResolvable<PermissionString, bigint>;
 
@@ -3047,7 +3053,7 @@ declare module 'discord.js' {
     | 'MANAGE_WEBHOOKS'
     | 'MANAGE_EMOJIS';
 
-  interface RecursiveArray<T> extends ReadonlyArray<T | RecursiveArray<T>> {}
+  interface RecursiveArray<T> extends ReadonlyArray<T | RecursiveArray<T>> { }
 
   type RecursiveReadonlyArray<T> = ReadonlyArray<T | RecursiveReadonlyArray<T>>;
 
@@ -3081,16 +3087,16 @@ declare module 'discord.js' {
     partial: true;
     fetch(): Promise<T>;
   } & {
-    [K in keyof Omit<
-      T,
-      'client' | 'createdAt' | 'createdTimestamp' | 'id' | 'partial' | 'fetch' | 'deleted' | O
-    >]: T[K] extends Function ? T[K] : T[K] | null; // tslint:disable-line:ban-types
-  };
+      [K in keyof Omit<
+        T,
+        'client' | 'createdAt' | 'createdTimestamp' | 'id' | 'partial' | 'fetch' | 'deleted' | O
+      >]: T[K] extends Function ? T[K] : T[K] | null; // tslint:disable-line:ban-types
+    };
 
   interface PartialDMChannel
     extends Partialize<
-      DMChannel,
-      'lastMessage' | 'lastMessageID' | 'messages' | 'recipient' | 'type' | 'typing' | 'typingCount'
+    DMChannel,
+    'lastMessage' | 'lastMessageID' | 'messages' | 'recipient' | 'type' | 'typing' | 'typingCount'
     > {
     lastMessage: null;
     lastMessageID: undefined;
@@ -3117,18 +3123,18 @@ declare module 'discord.js' {
 
   interface PartialGuildMember
     extends Partialize<
-      GuildMember,
-      | 'bannable'
-      | 'displayColor'
-      | 'displayHexColor'
-      | 'displayName'
-      | 'guild'
-      | 'kickable'
-      | 'permissions'
-      | 'roles'
-      | 'manageable'
-      | 'presence'
-      | 'voice'
+    GuildMember,
+    | 'bannable'
+    | 'displayColor'
+    | 'displayHexColor'
+    | 'displayName'
+    | 'guild'
+    | 'kickable'
+    | 'permissions'
+    | 'roles'
+    | 'manageable'
+    | 'presence'
+    | 'voice'
     > {
     readonly bannable: boolean;
     readonly displayColor: number;
@@ -3147,17 +3153,17 @@ declare module 'discord.js' {
 
   interface PartialMessage
     extends Partialize<
-      Message,
-      | 'attachments'
-      | 'channel'
-      | 'deletable'
-      | 'crosspostable'
-      | 'editable'
-      | 'mentions'
-      | 'pinnable'
-      | 'url'
-      | 'flags'
-      | 'embeds'
+    Message,
+    | 'attachments'
+    | 'channel'
+    | 'deletable'
+    | 'crosspostable'
+    | 'editable'
+    | 'mentions'
+    | 'pinnable'
+    | 'url'
+    | 'flags'
+    | 'embeds'
     > {
     attachments: Message['attachments'];
     channel: Message['channel'];
@@ -3250,6 +3256,21 @@ declare module 'discord.js' {
   }
 
   type Status = number;
+
+  export class Sticker extends Base {
+    constructor(client: Client, data: object);
+    public asset: string;
+    public readonly createdTimestamp: number;
+    public readonly createdAt: Date;
+    public description: string;
+    public format: StickerFormatTypes;
+    public id: Snowflake;
+    public name: string;
+    public packID: Snowflake;
+    public previewAsset: string | null;
+    public tags: string[];
+    public readonly url: string;
+  }
 
   interface StreamOptions {
     type?: StreamType;
